@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
 import 'package:flutter/services.dart';
 import 'package:salvetempo/service/login.dart';
+import 'package:http/http.dart' as http;
+import 'package:salvetempo/service/pacienteService.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,27 +23,50 @@ class _HomePageState extends State<HomePage> {
   var datanascCrtl = TextEditingController();
   var emailCrtl = TextEditingController();
   var passCrtl = TextEditingController();
+  var confirmPassCrtl = TextEditingController();
   var sexoCrtl = TextEditingController();
   var emailuserCrtl = TextEditingController();
   var passuserCrtl = TextEditingController();
+  var loginService = LoginService();
+  var pacienteService = PacienteService();
+
+  Future<Token> futureToken;
+  Future<Usuario> futureUsuario;
+  Future<Usuario> futureUsuarioGet;
+  Future<Paciente> futurePaciente;
+
   String sexoSelected;
 
-  void add() {
-    setState(() {
-      Paciente cadPasc = new Paciente(
-          nome: nomeCrtl.text,
-          sexo: sexoCrtl.text,
-          dataNasc: datanascCrtl.text,
-          email: emailCrtl.text,
-          senha: passCrtl.text);
-      String sexLimpo;
-      String dateLimpo = "Data de Nascimento";
-      dateText = dateLimpo;
-      sexoSelected = sexLimpo;
+  void add() async{
+    String email = emailCrtl.text;
+    String nome = nomeCrtl.text;
+    String sexo = sexoCrtl.text;
+    String dataNasc = datanascCrtl.text;
 
-      Paciente.fromJson(cadPasc.toJson());
+    futureUsuario = pacienteService.cadastroUsuario(email, nome, passCrtl.text, confirmPassCrtl.text);
 
-      print(cadPasc.toJson());
+    futureUsuario.then((result){
+      if (result == null){
+        print("Algum campo é inválido");
+      } else {
+        futureUsuarioGet = pacienteService.getUsuarioByEmail(email);
+
+        futureUsuarioGet.then((user){
+          if (user == null){
+            print("Usuário inválido.");
+          } else {
+            futurePaciente = pacienteService.cadastroPaciente(user.id, user.username, sexo, dataNasc);
+
+            futurePaciente.then((paciente){
+              if (user == null){
+                print("Paciente inválido.");
+              } else {
+                print(paciente.toJson());
+              }
+            });
+          }
+        });
+      }
     });
 
     nomeCrtl.clear();
@@ -47,15 +74,20 @@ class _HomePageState extends State<HomePage> {
     datanascCrtl.clear();
     emailCrtl.clear();
     passCrtl.clear();
+    confirmPassCrtl.clear();
   }
 
-  void login() {
-    setState(() {
-      Login login =
-          new Login(emailuser: emailuserCrtl.text, password: passuserCrtl.text);
-      Login.fromJson(login.toJson());
-      print(login.toJson());
+  void login() async{
+    futureToken = loginService.login(emailuserCrtl.text, passuserCrtl.text);
+
+    futureToken.then((result){
+      if (result == null){
+        print("E-mail ou senha inválidos.");
+      } else {
+        print('key: ' + result.key);
+      }
     });
+
     emailuserCrtl.clear();
     passuserCrtl.clear();
   }
@@ -308,7 +340,7 @@ class _HomePageState extends State<HomePage> {
                                           setState(() {
                                             _dateInfo = dtPick;
                                             dateText = formatDate(_dateInfo,
-                                                [dd, '/', mm, '/', yyyy]);
+                                                [yyyy, '-', mm, '-', dd]);
                                             datanascCrtl.text = dateText;
                                           });
                                         }
@@ -343,6 +375,21 @@ class _HomePageState extends State<HomePage> {
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
                                     labelText: "Senha",
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 16),
+                                child: TextFormField(
+                                  textInputAction: TextInputAction.go,
+                                  controller: confirmPassCrtl,
+                                  onFieldSubmitted: (_) =>
+                                      FocusScope.of(context).unfocus(),
+                                  keyboardType: TextInputType.text,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.vpn_key),
+                                    labelText: "Confirmar Senha",
                                   ),
                                 ),
                               ),
