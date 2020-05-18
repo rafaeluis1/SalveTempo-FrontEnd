@@ -22,20 +22,22 @@ class LoginService {
   var url = 'http://192.168.1.21:8000/rest-auth/login/';
 
   Future<Token> login(String email, String password) async {
-    var data = {
-      "username": email,
-      "password": password
-    };
+    var data = {"username": email, "password": password};
 
-    final response = await http.post(
-      url,
-      body: data
-    );
+    final response = await http.post(url, body: data);
 
-    if (response.statusCode >= 200 && response.statusCode <= 299){
+    if (validationResponse(response.statusCode)) {
       return Token.fromJson(json.decode(response.body));
     } else {
       return null;
+    }
+  }
+
+  bool validationResponse(int code) {
+    if (code >= 200 && code <= 299) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
