@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
 import 'package:flutter/services.dart';
 import 'package:salvetempo/service/login.dart';
+import 'package:salvetempo/screens/userpanel.dart';
 import 'package:http/http.dart' as http;
-import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/screens/signup.dart';
 import 'package:salvetempo/widget/SlideCadastro.dart';
 
@@ -16,20 +16,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool selected = true;
-  DateTime _dateInfo = DateTime.now();
   String dateText = "Data de Nascimento";
   FocusNode loginFocus;
 
-  var nomeCrtl = TextEditingController();
-  var datanascCrtl = TextEditingController();
-  var emailCrtl = TextEditingController();
-  var passCrtl = TextEditingController();
-  var confirmPassCrtl = TextEditingController();
-  var sexoCrtl = TextEditingController();
   var emailuserCrtl = TextEditingController();
   var passuserCrtl = TextEditingController();
   var loginService = LoginService();
-  var pacienteService = PacienteService();
 
   Future<Token> futureToken;
   Future<Usuario> futureUsuario;
@@ -37,48 +29,6 @@ class _HomePageState extends State<HomePage> {
   Future<Paciente> futurePaciente;
 
   String sexoSelected;
-
-  void add() async {
-    String email = emailCrtl.text;
-    String nome = nomeCrtl.text;
-    String sexo = sexoCrtl.text;
-    String dataNasc = datanascCrtl.text;
-
-    futureUsuario = pacienteService.cadastroUsuario(
-        email, nome, passCrtl.text, confirmPassCrtl.text);
-
-    futureUsuario.then((result) {
-      if (result == null) {
-        print("Algum campo é inválido");
-      } else {
-        futureUsuarioGet = pacienteService.getUsuarioByEmail(email);
-
-        futureUsuarioGet.then((user) {
-          if (user == null) {
-            print("Usuário inválido.");
-          } else {
-            futurePaciente = pacienteService.cadastroPaciente(
-                user.id, user.username, sexo, dataNasc);
-
-            futurePaciente.then((paciente) {
-              if (user == null) {
-                print("Paciente inválido.");
-              } else {
-                print(paciente.toJson());
-              }
-            });
-          }
-        });
-      }
-    });
-
-    nomeCrtl.clear();
-    sexoCrtl.clear();
-    datanascCrtl.clear();
-    emailCrtl.clear();
-    passCrtl.clear();
-    confirmPassCrtl.clear();
-  }
 
   void login() async {
     futureToken = loginService.login(emailuserCrtl.text, passuserCrtl.text);
@@ -93,6 +43,12 @@ class _HomePageState extends State<HomePage> {
 
     emailuserCrtl.clear();
     passuserCrtl.clear();
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                UserPanel())); // Mudar essa linha pra dentro da validação
   }
 
   @override
@@ -261,7 +217,14 @@ class _HomePageState extends State<HomePage> {
                   width: 400,
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text("CADASTRO"),
+                    child: Text(
+                      "CADASTRO",
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,

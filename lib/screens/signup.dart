@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:salvetempo/screens/userpanel.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/models/paciente.dart';
 
@@ -71,6 +72,11 @@ class _SignUpState extends State<SignUp> {
     emailCrtl.clear();
     passCrtl.clear();
     confirmPassCrtl.clear();
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                UserPanel())); // Mudar essa linha pra dentro da validação
   }
 
   @override
@@ -83,28 +89,28 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 400),
-                child: SizedBox(
-                  height: 10,
-                  width: 10,
-                  child: GestureDetector(
-                      child: Icon(Icons.arrow_back),
+              Wrap(
+                direction: Axis.horizontal,
+                spacing: 135,
+                children: <Widget>[
+                  GestureDetector(
+                      child: SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Icon(Icons.arrow_back_ios),
+                      ),
                       onTap: () {
                         Navigator.pop(context);
-                        print("Clicou");
                       }),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "CADASTRO",
-                  style: TextStyle(
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                  Text(
+                    "CADASTRO",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
+                ],
               ),
               SizedBox(
                 height: 50,
