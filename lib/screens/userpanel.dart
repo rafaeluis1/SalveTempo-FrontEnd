@@ -1,5 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:salvetempo/models/paciente.dart';
 import 'package:salvetempo/screens/anamnese.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:salvetempo/service/pacienteService.dart';
+import 'package:salvetempo/service/sintomaService.dart';
 
 class UserPanel extends StatefulWidget {
   @override
@@ -7,6 +13,32 @@ class UserPanel extends StatefulWidget {
 }
 
 class _UserPanelState extends State<UserPanel> {
+  var pacienteService = PacienteService();
+  var sintomaService = SintomaService();
+
+  Future<Paciente> buscaPacienteByEmail() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String email = sharedPreferences.getString("email");
+
+    futurePaciente = pacienteService.getPacienteByEmail(email);
+    return futurePaciente;
+  }
+
+  Future<int> startConsulta() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String key = sharedPreferences.get("token");
+
+    setState(() {
+      sharedPreferences.setStringList("sintomas", []);
+    });
+
+    futureResult = sintomaService.startConsulta(key);
+    return futureResult;
+  }
+
+  Future<Paciente> futurePaciente;
+  Future<int> futureResult;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,17 +52,25 @@ class _UserPanelState extends State<UserPanel> {
               color: Colors.white,
             ),
             Positioned(
-              top: 80,
-              left: 110,
-              child: Text(
-                "Olá, %username%",
-                style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                ),
-              ),
-            ),
+                top: 80,
+                left: 40,
+                child: FutureBuilder<Paciente>(
+                  future: futurePaciente = buscaPacienteByEmail(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        "Olá, " + snapshot.data.nome,
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        ),
+                      );
+                    } else {
+                      return Text('');
+                    }
+                  },
+                )),
             Center(
               child: ButtonBar(
                 buttonHeight: 50,
@@ -49,10 +89,18 @@ class _UserPanelState extends State<UserPanel> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Anamnese()));
+                        futureResult = startConsulta();
+
+                        futureResult.then((result) {
+                          if (result == 0) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Anamnese()));
+                          } else {
+                            print('Algo deu errado');
+                          }
+                        });
                       }),
                   SizedBox(
                     height: 10,

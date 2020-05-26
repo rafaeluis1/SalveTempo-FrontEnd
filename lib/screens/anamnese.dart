@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:salvetempo/models/sintoma.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:salvetempo/service/sintomaService.dart';
 
 class Anamnese extends StatefulWidget {
   @override
@@ -6,6 +9,41 @@ class Anamnese extends StatefulWidget {
 }
 
 class _AnamneseState extends State<Anamnese> {
+  var sintomaService = SintomaService();
+
+  Future<Sintoma> showSintoma() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String key = sharedPreferences.get("token");
+    List<String> sintomas = sharedPreferences.getStringList("sintomas");
+
+    /*
+    print("Sintomas: " +
+        sharedPreferences.getStringList("sintomas").length.toString());
+    for (String s in sharedPreferences.getStringList("sintomas")) {
+      print(s);
+    }*/
+
+    futureSintoma = sintomaService.showSintoma(key, sintomas);
+    return futureSintoma;
+  }
+
+  Future<int> answerSintoma(String resposta) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String key = sharedPreferences.get("token");
+    List<String> sintomas = sharedPreferences.getStringList("sintomas");
+
+    sintomas.add(sintoma + ';' + resposta);
+    print(sintomas);
+    sharedPreferences.setStringList("sintomas", sintomas);
+
+    futureResult = sintomaService.answerSintoma(key, sintoma, resposta);
+    return futureResult;
+  }
+
+  Future<Sintoma> futureSintoma;
+  Future<int> futureResult;
+  String sintoma;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +95,17 @@ class _AnamneseState extends State<Anamnese> {
                                 fontSize: 18,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              futureResult = answerSintoma("1");
+
+                              futureResult.then((result) {
+                                if (result == 0) {
+                                  setState(() {});
+                                } else {
+                                  print('Algo deu errado');
+                                }
+                              });
+                            },
                           ),
                           SizedBox(
                             width: 5,
@@ -74,7 +122,17 @@ class _AnamneseState extends State<Anamnese> {
                                 fontSize: 18,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              futureResult = answerSintoma("0");
+
+                              futureResult.then((result) {
+                                if (result == 0) {
+                                  setState(() {});
+                                } else {
+                                  print('Algo deu errado');
+                                }
+                              });
+                            },
                           ),
                           SizedBox(
                             width: 5,
@@ -91,7 +149,17 @@ class _AnamneseState extends State<Anamnese> {
                                 fontSize: 18,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              futureResult = answerSintoma("-1");
+
+                              futureResult.then((result) {
+                                if (result == 0) {
+                                  setState(() {});
+                                } else {
+                                  print('Algo deu errado');
+                                }
+                              });
+                            },
                           ),
                         ],
                       ),
@@ -104,7 +172,7 @@ class _AnamneseState extends State<Anamnese> {
               top: 280,
               right: 90,
               child: Text(
-                "Você possui?".toUpperCase(),
+                "Você possui:".toUpperCase(),
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w500,
@@ -113,15 +181,24 @@ class _AnamneseState extends State<Anamnese> {
               ),
             ),
             Center(
-              child: Text(
-                "%sintoma%",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 30,
-                ),
-              ),
-            ),
+                child: FutureBuilder<Sintoma>(
+              future: futureSintoma = showSintoma(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  sintoma = snapshot.data.nomecsv;
+                  return Text(
+                    snapshot.data.nome + '?',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 30,
+                    ),
+                  );
+                } else {
+                  return Text('');
+                }
+              },
+            )),
           ],
         ),
       ),

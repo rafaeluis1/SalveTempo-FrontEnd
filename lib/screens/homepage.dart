@@ -8,6 +8,7 @@ import 'package:salvetempo/screens/userpanel.dart';
 import 'package:http/http.dart' as http;
 import 'package:salvetempo/screens/signup.dart';
 import 'package:salvetempo/widget/SlideCadastro.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,24 +32,29 @@ class _HomePageState extends State<HomePage> {
   String sexoSelected;
 
   void login() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     futureToken = loginService.login(emailuserCrtl.text, passuserCrtl.text);
 
     futureToken.then((result) {
       if (result == null) {
         print("E-mail ou senha inválidos.");
+
+        emailuserCrtl.clear();
+        passuserCrtl.clear();
       } else {
-        print('key: ' + result.key);
+        setState(() {
+          sharedPreferences.setString("token", result.key);
+          sharedPreferences.setString("email", emailuserCrtl.text);
+        });
+
+        emailuserCrtl.clear();
+        passuserCrtl.clear();
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => UserPanel()));
       }
     });
-
-    emailuserCrtl.clear();
-    passuserCrtl.clear();
-
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                UserPanel())); // Mudar essa linha pra dentro da validação
   }
 
   @override
