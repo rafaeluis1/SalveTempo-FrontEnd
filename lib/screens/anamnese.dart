@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salvetempo/models/sintoma.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/sintomaService.dart';
+import 'dart:convert';
 
 class Anamnese extends StatefulWidget {
   @override
@@ -27,21 +28,36 @@ class _AnamneseState extends State<Anamnese> {
     return futureSintoma;
   }
 
-  Future<int> answerSintoma(String resposta) async {
+  Future<SintomaAnswer> answerSintoma(String resposta) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String key = sharedPreferences.get("token");
     List<String> sintomas = sharedPreferences.getStringList("sintomas");
 
     sintomas.add(sintoma + ';' + resposta);
-    print(sintomas);
     sharedPreferences.setStringList("sintomas", sintomas);
 
-    futureResult = sintomaService.answerSintoma(key, sintoma, resposta);
-    return futureResult;
+    futureSintomaAnswer = sintomaService.answerSintoma(key, sintomas);
+    return futureSintomaAnswer;
+  }
+
+  void redirectPage(SintomaAnswer result) {
+    if (!(result == null)) {
+      if (result.valido == true) {
+        if (result.counter_doencas > 3) {
+          setState(() {});
+        } else {
+          //redirecionar para a página de médico
+        }
+      } else {
+        //redirecionar para a página de erro
+      }
+    } else {
+      print('Algo deu errado');
+    }
   }
 
   Future<Sintoma> futureSintoma;
-  Future<int> futureResult;
+  Future<SintomaAnswer> futureSintomaAnswer;
   String sintoma;
 
   @override
@@ -96,14 +112,10 @@ class _AnamneseState extends State<Anamnese> {
                               ),
                             ),
                             onPressed: () {
-                              futureResult = answerSintoma("1");
+                              futureSintomaAnswer = answerSintoma("1");
 
-                              futureResult.then((result) {
-                                if (result == 0) {
-                                  setState(() {});
-                                } else {
-                                  print('Algo deu errado');
-                                }
+                              futureSintomaAnswer.then((result) {
+                                redirectPage(result);
                               });
                             },
                           ),
@@ -123,14 +135,10 @@ class _AnamneseState extends State<Anamnese> {
                               ),
                             ),
                             onPressed: () {
-                              futureResult = answerSintoma("0");
+                              futureSintomaAnswer = answerSintoma("0");
 
-                              futureResult.then((result) {
-                                if (result == 0) {
-                                  setState(() {});
-                                } else {
-                                  print('Algo deu errado');
-                                }
+                              futureSintomaAnswer.then((result) {
+                                redirectPage(result);
                               });
                             },
                           ),
@@ -150,14 +158,10 @@ class _AnamneseState extends State<Anamnese> {
                               ),
                             ),
                             onPressed: () {
-                              futureResult = answerSintoma("-1");
+                              futureSintomaAnswer = answerSintoma("-1");
 
-                              futureResult.then((result) {
-                                if (result == 0) {
-                                  setState(() {});
-                                } else {
-                                  print('Algo deu errado');
-                                }
+                              futureSintomaAnswer.then((result) {
+                                redirectPage(result);
                               });
                             },
                           ),
@@ -187,7 +191,7 @@ class _AnamneseState extends State<Anamnese> {
                 if (snapshot.hasData) {
                   sintoma = snapshot.data.nomecsv;
                   return Text(
-                    snapshot.data.nome + '?',
+                    utf8.decode(snapshot.data.nome.runes.toList()) + '?',
                     style: TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.w300,

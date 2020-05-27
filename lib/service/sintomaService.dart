@@ -37,17 +37,23 @@ class SintomaService {
     }
   }
 
-  Future<int> answerSintoma(String key, String sintoma, String resposta) async {
+  Future<SintomaAnswer> answerSintoma(String key, List<String> sintomas) async {
     var url = 'http://192.168.1.21:8000/answersintoma/';
-    var data = {"sintoma": sintoma, "resposta": resposta.toString()};
+
+    Map<String, String> body = Map.fromIterable(sintomas,
+        key: (k) => k.toString().split(';')[0],
+        value: (v) => v.toString().split(';')[1]);
+
     var headers = {"Authorization": "Token " + key};
 
-    final response = await http.post(url, body: data, headers: headers);
+    final response = await http.post(url, body: body, headers: headers);
+    print(response.body);
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
-      return 0;
+      List<dynamic> sintomaAnswerJson = jsonDecode(response.body);
+      return SintomaAnswer.fromJson(sintomaAnswerJson[0]);
     } else {
-      return -1;
+      return null;
     }
   }
 }

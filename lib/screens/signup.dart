@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:salvetempo/screens/homepage.dart';
 import 'package:salvetempo/screens/userpanel.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/models/paciente.dart';
@@ -76,7 +77,7 @@ class _SignUpState extends State<SignUp> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                UserPanel())); // Mudar essa linha pra dentro da validação
+                HomePage())); // Mudar essa linha pra dentro da validação
   }
 
   @override
