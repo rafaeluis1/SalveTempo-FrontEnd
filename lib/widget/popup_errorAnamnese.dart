@@ -50,7 +50,7 @@ class PopupErrorAn extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               Text(
-                "Com os sintomas que indicou, infelizmente não consigo chegar a nenhum resultado final. Volte ao inicio para que possamos fazer uma nova anamnese. ",
+                "Com os sintomas que indicou, infelizmente não consigo chegar a nenhum resultado final. Volte ao inicio para que possamos realizar uma nova consulta. ",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.0,
@@ -61,8 +61,10 @@ class PopupErrorAn extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    //Navigator.pop(context, true);
                     // To close the dialog
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => UserPanel()));
                   },
                   child: Text("Voltar o painel de usuário"),
                 ),

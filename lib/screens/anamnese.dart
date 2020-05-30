@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/sintoma.dart';
+import 'package:salvetempo/screens/chooseTime.dart';
 import 'package:salvetempo/widget/popup_errorAnamnese.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/sintomaService.dart';
@@ -17,13 +18,6 @@ class _AnamneseState extends State<Anamnese> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String key = sharedPreferences.get("token");
     List<String> sintomas = sharedPreferences.getStringList("sintomas");
-
-    /*
-    print("Sintomas: " +
-        sharedPreferences.getStringList("sintomas").length.toString());
-    for (String s in sharedPreferences.getStringList("sintomas")) {
-      print(s);
-    }*/
 
     futureSintoma = sintomaService.showSintoma(key, sintomas);
     return futureSintoma;
@@ -47,10 +41,14 @@ class _AnamneseState extends State<Anamnese> {
         if (result.counter_doencas > 3) {
           setState(() {});
         } else {
-          //redirecionar para a página de médico
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ChooseTime()));
         }
       } else {
-        //redirecionar para a página de erro
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => PopupErrorAn(),
+        );
       }
     } else {
       print('Algo deu errado');
@@ -138,11 +136,6 @@ class _AnamneseState extends State<Anamnese> {
                                 ),
                               ),
                               onPressed: () {
-                                //showDialog(
-                                //  context: context,
-                                //  builder: (BuildContext context) =>
-                                //      PopupErrorAn(),
-                                //);
                                 futureSintomaAnswer = answerSintoma("1");
 
                                 futureSintomaAnswer.then((result) {

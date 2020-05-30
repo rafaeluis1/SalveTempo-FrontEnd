@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:salvetempo/models/medico.dart';
+import 'package:salvetempo/service/medicoService.dart';
 
 class ChooseMedic extends StatefulWidget {
+  final String timeKey;
+
+  ChooseMedic(this.timeKey);
+
   @override
-  _ChooseMedicState createState() => _ChooseMedicState();
+  _ChooseMedicState createState() => _ChooseMedicState(this.timeKey);
 }
 
 class _ChooseMedicState extends State<ChooseMedic> {
+  String timeKey;
+
+  _ChooseMedicState(this.timeKey);
+
   @override
   Widget build(BuildContext context) {
+    MedicoService medicoService = new MedicoService();
+    List<Medico> medicos = medicoService.createMedicos();
+
+    List<Medico> medicosDisponiveis =
+        medicoService.getMedicosByPeriodo(medicos, this.timeKey);
+
     return Scaffold(
       body: Container(
         width: double.maxFinite,
@@ -34,51 +50,35 @@ class _ChooseMedicState extends State<ChooseMedic> {
               ),
               child: Center(
                 child: Container(
-                  height: 625,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                    height: 625,
+                    width: 325,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: ListView(
-                    shrinkWrap: true, //just set this property
-                    padding: const EdgeInsets.all(8.0),
-                    children: <Widget>[
-                      doctorCard(context, "Felipe Moura", "Cardiologista",
-                          "UBS - Jataí"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      doctorCard(context, "Jarbas da Costa", "Cardiologista",
-                          "UBS - Jataí"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      doctorCard(context, "Luiz Santos", "Cardiologista",
-                          "UBS - Pq Bela Vista"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      doctorCard(context, "Drauzio Rodrigues", "Cardiologista",
-                          "UBS - Santa Rosália"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      doctorCard(context, "Marcelo Severino", "Cardiologista",
-                          "UBS - ZN Sorocaba"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      doctorCard(context, "Pamela Souza", "Cardiologista",
-                          "UBS - ZN Sorocaba"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                ),
+                    child: ListView.builder(
+                      itemCount: medicosDisponiveis.length,
+                      itemBuilder: (context, index) {
+                        return ListView(
+                          shrinkWrap: true, //just set this property
+                          padding: const EdgeInsets.all(8.0),
+                          children: <Widget>[
+                            doctorCard(
+                                context,
+                                medicosDisponiveis[index].nome,
+                                medicosDisponiveis[index].especializacao,
+                                medicosDisponiveis[index].unidadeSaude,
+                                medicosDisponiveis[index].sexo,
+                                this.timeKey),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        );
+                      },
+                    )),
               ),
             ),
           ),
@@ -88,11 +88,23 @@ class _ChooseMedicState extends State<ChooseMedic> {
   }
 
   Widget doctorCard(BuildContext context, String nome, String especialidade,
-      String unidadeSaude) {
+      String unidadeSaude, String sexo, String timeKey) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        String nomenclatura = sexo == 'M' ? 'o Dr.' : 'a Dra.';
+        String periodo = timeKey == "manha" ? 'manhã' : timeKey;
+        String finalizacao = 'Consulta marcada com ' +
+            nomenclatura +
+            ' ' +
+            nome +
+            ' no dia 30/05/2020, no período da ' +
+            periodo +
+            '.';
+
+        print(finalizacao);
+      },
       child: Container(
-        height: 100,
+        height: 150,
         width: 100,
         decoration: BoxDecoration(
           color: Colors.amber,
@@ -111,16 +123,8 @@ class _ChooseMedicState extends State<ChooseMedic> {
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: 10,
-              left: 10,
-              child: CircleAvatar(
-                radius: 30.0,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            Positioned(
               top: 15,
-              left: 120,
+              left: 10,
               child: Text(
                 nome,
                 style: TextStyle(
@@ -131,8 +135,8 @@ class _ChooseMedicState extends State<ChooseMedic> {
               ),
             ),
             Positioned(
-              top: 40,
-              left: 120,
+              top: 45,
+              left: 10,
               child: Text(
                 especialidade,
                 style: TextStyle(
@@ -143,10 +147,22 @@ class _ChooseMedicState extends State<ChooseMedic> {
               ),
             ),
             Positioned(
-              top: 70,
-              left: 120,
+              top: 80,
+              left: 10,
               child: Text(
                 unidadeSaude,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.lightBlue,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 110,
+              left: 10,
+              child: Text(
+                "Data: 30/05/2020",
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.lightBlue,

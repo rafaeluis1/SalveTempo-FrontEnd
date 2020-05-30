@@ -36,4 +36,16 @@ class MedicoService {
 
     return medicos;
   }
+
+  List<Medico> getMedicosByPeriodo(List<Medico> medicos, String timeKey) {
+    List<Medico> medicosDisponiveis = new List<Medico>();
+
+    for (Medico medico in medicos) {
+      if (medico.diaPeriodoTrabalho[timeKey] == true) {
+        medicosDisponiveis.add(medico);
+      }
+    }
+
+    return medicosDisponiveis;
+  }
 }

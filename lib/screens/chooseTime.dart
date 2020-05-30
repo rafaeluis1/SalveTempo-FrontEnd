@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:diacritic/diacritic.dart';
+import 'package:salvetempo/screens/chooseMedic.dart';
 
 class ChooseTime extends StatefulWidget {
   @override
@@ -33,7 +35,8 @@ class _ChooseTimeState extends State<ChooseTime> {
                   Stack(
                     children: <Widget>[
                       Container(
-                        height: selectedSeg ? 100 : 60,
+                        //height: selectedSeg ? 100 : 60,
+                        height: 500,
                         width: 400,
                         color: Colors.amberAccent,
                       ),
@@ -45,9 +48,26 @@ class _ChooseTimeState extends State<ChooseTime> {
                           });
                         },
                         child: Container(
-                          height: 60,
+                          height: 500,
                           width: 400,
                           color: Colors.brown,
+                          child: ListView(
+                              shrinkWrap: true, //just set this property
+                              padding: const EdgeInsets.all(8.0),
+                              children: <Widget>[
+                                timeCard(context, "Manhã"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                timeCard(context, "Tarde"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                timeCard(context, "Noite"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ]),
                         ),
                       ),
                     ],
@@ -61,6 +81,50 @@ class _ChooseTimeState extends State<ChooseTime> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget timeCard(BuildContext context, String desc) {
+    return GestureDetector(
+      onTap: () {
+        String jsonTimeKey = removeDiacritics(desc.toLowerCase());
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ChooseMedic(jsonTimeKey)));
+      },
+      child: Container(
+        height: 125,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.amber,
+          borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(2, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 40,
+              right: 180,
+              child: Text(
+                desc,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

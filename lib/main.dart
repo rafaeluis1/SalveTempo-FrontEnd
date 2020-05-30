@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         "/signup": (context) => SignUp(),
         "/userpanel": (context) => UserPanel(),
         "/anamnese": (context) => Anamnese(),
-        "/chooseMedic": (context) => ChooseMedic(),
+        //"/chooseMedic": (context) => ChooseMedic(),
       },
     );
   }
