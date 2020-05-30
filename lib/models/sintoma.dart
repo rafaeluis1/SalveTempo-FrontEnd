@@ -19,3 +19,22 @@ class Sintoma {
     return data;
   }
 }
+
+class SintomaAnswer {
+  int counter_doencas;
+  bool valido;
+
+  SintomaAnswer({this.counter_doencas, this.valido});
+
+  SintomaAnswer.fromJson(Map<String, dynamic> json) {
+    counter_doencas = json['counter_doencas'];
+    valido = json['valido'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['counter_doencas'] = this.counter_doencas;
+    data['valido'] = this.valido;
+    return data;
+  }
+}
