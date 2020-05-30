@@ -52,7 +52,9 @@ class _HomePageState extends State<HomePage> {
         passuserCrtl.clear();
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => UserPanel()));
+          context,
+          MaterialPageRoute(builder: (context) => UserPanel()),
+        );
       }
     });
   }

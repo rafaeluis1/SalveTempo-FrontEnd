@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:salvetempo/screens/chooseMedic.dart';
+import 'package:salvetempo/screens/chooseTime.dart';
+import 'package:salvetempo/screens/userpanel.dart';
+import 'screens/anamnese.dart';
 import 'screens/homepage.dart';
 import 'screens/signup.dart';
 
@@ -14,7 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      routes: {
+        "/": (context) => HomePage(),
+        "/signup": (context) => SignUp(),
+        "/userpanel": (context) => UserPanel(),
+        "/anamnese": (context) => Anamnese(),
+        "/chooseMedic": (context) => ChooseMedic(),
+      },
     );
   }
 }
