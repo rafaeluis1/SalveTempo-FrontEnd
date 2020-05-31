@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/medico.dart';
+import 'package:salvetempo/screens/end_consulta.dart';
 import 'package:salvetempo/service/medicoService.dart';
 
 class ChooseMedic extends StatefulWidget {
@@ -101,7 +102,8 @@ class _ChooseMedicState extends State<ChooseMedic> {
             periodo +
             '.';
 
-        print(finalizacao);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => EndConsulta(finalizacao)));
       },
       child: Container(
         height: 150,

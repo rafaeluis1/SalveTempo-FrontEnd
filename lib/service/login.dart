@@ -19,9 +19,8 @@ class Token {
 }
 
 class LoginService {
-  var url = 'http://192.168.1.21:8000/rest-auth/login/';
-
   Future<Token> login(String email, String password) async {
+    var url = 'http://192.168.1.21:8000/rest-auth/login/';
     var data = {"username": email, "password": password};
 
     final response = await http.post(url, body: data);
@@ -30,6 +29,20 @@ class LoginService {
       return Token.fromJson(json.decode(response.body));
     } else {
       return null;
+    }
+  }
+
+  Future<int> logout(String key) async {
+    var url = 'http://192.168.1.21:8000/rest-auth/logout/';
+    var data = {};
+    var headers = {"Authorization": "Token " + key};
+
+    final response = await http.post(url, body: data, headers: headers);
+
+    if (validationResponse(response.statusCode)) {
+      return 0;
+    } else {
+      return -1;
     }
   }
 

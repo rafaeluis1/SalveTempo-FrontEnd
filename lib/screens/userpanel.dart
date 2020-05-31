@@ -1,11 +1,13 @@
 import 'dart:ffi';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
 import 'package:salvetempo/screens/anamnese.dart';
+import 'package:salvetempo/screens/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/service/sintomaService.dart';
+import 'package:salvetempo/service/login.dart';
 
 class UserPanel extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class UserPanel extends StatefulWidget {
 class _UserPanelState extends State<UserPanel> {
   var pacienteService = PacienteService();
   var sintomaService = SintomaService();
+  var loginService = LoginService();
 
   Future<Paciente> buscaPacienteByEmail() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -36,13 +39,42 @@ class _UserPanelState extends State<UserPanel> {
     return futureResult;
   }
 
+  Future<int> logout() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String key = sharedPreferences.get("token");
+
+    futureResult = loginService.logout(key);
+    return futureResult;
+  }
+
   Future<Paciente> futurePaciente;
   Future<int> futureResult;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Painel do Usuário")),
+      appBar: AppBar(
+        title: Text("Painel do Usuário"),
+        leading: Transform.rotate(
+          angle: 180 * pi / 180,
+          child: IconButton(
+            icon: Icon(Icons.exit_to_app),
+            tooltip: 'Logout',
+            onPressed: () {
+              futureResult = logout();
+
+              futureResult.then((result) {
+                if (result == 0) {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                } else {
+                  print('Algo deu errado');
+                }
+              });
+            },
+          ),
+        ),
+      ),
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,
