@@ -38,6 +38,9 @@ class _ChooseTimeState extends State<ChooseTime> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Selecione o Período"),
+        ),
         body: Container(
           width: double.maxFinite,
           height: double.maxFinite,
@@ -73,20 +76,23 @@ class _ChooseTimeState extends State<ChooseTime> {
                             });
                           },
                           child: Container(
-                            height: 500,
+                            height: 630,
                             width: 400,
-                            color: Colors.brown,
+                            color: Colors.white,
                             child: ListView(
                                 shrinkWrap: true, //just set this property
                                 padding: const EdgeInsets.all(8.0),
                                 children: <Widget>[
+                                  SizedBox(
+                                    height: 60,
+                                  ),
                                   timeCard(context, "Manhã"),
                                   SizedBox(
-                                    height: 10,
+                                    height: 60,
                                   ),
                                   timeCard(context, "Tarde"),
                                   SizedBox(
-                                    height: 10,
+                                    height: 60,
                                   ),
                                   timeCard(context, "Noite"),
                                   SizedBox(
@@ -100,7 +106,7 @@ class _ChooseTimeState extends State<ChooseTime> {
                     Container(
                       height: 100,
                       width: 100,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ],
                 ),

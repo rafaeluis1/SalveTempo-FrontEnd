@@ -26,6 +26,9 @@ class _ChooseMedicState extends State<ChooseMedic> {
         medicoService.getMedicosByPeriodo(medicos, this.timeKey);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Selecione o Médico"),
+      ),
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,

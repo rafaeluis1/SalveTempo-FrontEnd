@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/service/sintomaService.dart';
 import 'package:salvetempo/service/login.dart';
+import 'dart:convert';
 
 class UserPanel extends StatefulWidget {
   @override
@@ -91,7 +92,8 @@ class _UserPanelState extends State<UserPanel> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Text(
-                        "Olá, " + snapshot.data.nome,
+                        "Olá, " +
+                            utf8.decode(snapshot.data.nome.runes.toList()),
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.w500,

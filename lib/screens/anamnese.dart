@@ -87,6 +87,9 @@ class _AnamneseState extends State<Anamnese> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Apontamento de Sintomas"),
+        ),
         body: Container(
           width: double.maxFinite,
           height: double.maxFinite,
