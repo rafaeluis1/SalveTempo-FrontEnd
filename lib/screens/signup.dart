@@ -39,9 +39,31 @@ class _SignUpState extends State<SignUp> {
     String sexo = sexoCrtl.text;
     String dataNasc = datanascCrtl.text;
 
-    futureUsuario = pacienteService.cadastroUsuario(
-        email, nome, passCrtl.text, confirmPassCrtl.text);
+    pacienteService
+        .cadastroUsuario(email, nome, passCrtl.text, confirmPassCrtl.text)
+        .then((result) {
+      if (result == -1) {
+        print("Algum campo é inválido.");
+      } else {
+        pacienteService.getUsuarioByEmail(email).then((user) {
+          if (user == null) {
+            print("Usuário inválido.");
+          } else {
+            pacienteService
+                .cadastroPaciente(user.id, user.username, sexo, dataNasc)
+                .then((paciente) {
+              if (paciente == null) {
+                print("Paciente inválido.");
+              } else {
+                print(paciente.toJson());
+              }
+            });
+          }
+        });
+      }
+    });
 
+    /*
     futureUsuario.then((result) {
       if (result == null) {
         print("Algum campo é inválido");
@@ -65,7 +87,7 @@ class _SignUpState extends State<SignUp> {
           }
         });
       }
-    });
+    });*/
 
     nomeCrtl.clear();
     sexoCrtl.clear();

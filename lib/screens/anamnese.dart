@@ -16,7 +16,7 @@ class _AnamneseState extends State<Anamnese> {
 
   Future<Sintoma> showSintoma() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String key = sharedPreferences.get("token");
+    String key = sharedPreferences.get("key");
     List<String> sintomas = sharedPreferences.getStringList("sintomas");
 
     futureSintoma = sintomaService.showSintoma(key, sintomas);
@@ -25,7 +25,7 @@ class _AnamneseState extends State<Anamnese> {
 
   Future<SintomaAnswer> answerSintoma(String resposta) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String key = sharedPreferences.get("token");
+    String key = sharedPreferences.get("key");
     List<String> sintomas = sharedPreferences.getStringList("sintomas");
 
     sintomas.add(sintoma + ';' + resposta);

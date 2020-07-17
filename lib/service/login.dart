@@ -21,7 +21,7 @@ class Token {
 class LoginService {
   Future<Token> login(String email, String password) async {
     var url = 'http://192.168.1.21:8000/rest-auth/login/';
-    var data = {"username": email, "password": password};
+    var data = {"username": email, "email": email, "password": password};
 
     final response = await http.post(url, body: data);
 
@@ -43,6 +43,20 @@ class LoginService {
       return 0;
     } else {
       return -1;
+    }
+  }
+
+  Future<bool> resetPassword(String email) async {
+    var url = 'http://192.168.1.21:8000/rest-auth/password/reset/';
+
+    var data = {"email": email};
+
+    final response = await http.post(url, body: data);
+
+    if (validationResponse(response.statusCode)) {
+      return true;
+    } else {
+      return false;
     }
   }
 

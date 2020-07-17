@@ -20,17 +20,17 @@ class _UserPanelState extends State<UserPanel> {
   var sintomaService = SintomaService();
   var loginService = LoginService();
 
-  Future<Paciente> buscaPacienteByEmail() async {
+  Future<Paciente> buscaPacienteById() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String email = sharedPreferences.getString("email");
+    String id = sharedPreferences.getString("id");
 
-    futurePaciente = pacienteService.getPacienteByEmail(email);
+    futurePaciente = pacienteService.getPacienteById(id);
     return futurePaciente;
   }
 
   Future<int> startConsulta() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String key = sharedPreferences.get("token");
+    String key = sharedPreferences.get("key");
 
     setState(() {
       sharedPreferences.setStringList("sintomas", []);
@@ -42,7 +42,7 @@ class _UserPanelState extends State<UserPanel> {
 
   Future<int> logout() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String key = sharedPreferences.get("token");
+    String key = sharedPreferences.get("key");
 
     futureResult = loginService.logout(key);
     return futureResult;
@@ -88,7 +88,7 @@ class _UserPanelState extends State<UserPanel> {
                 top: 80,
                 left: 40,
                 child: FutureBuilder<Paciente>(
-                  future: futurePaciente = buscaPacienteByEmail(),
+                  future: futurePaciente = buscaPacienteById(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Text(

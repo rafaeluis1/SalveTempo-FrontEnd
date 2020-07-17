@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
 import 'package:flutter/services.dart';
+import 'package:salvetempo/screens/resetPassword.dart';
 import 'package:salvetempo/service/login.dart';
 import 'package:salvetempo/screens/userpanel.dart';
 import 'package:http/http.dart' as http;
 import 'package:salvetempo/screens/signup.dart';
+import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/widget/SlideCadastro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   var emailuserCrtl = TextEditingController();
   var passuserCrtl = TextEditingController();
   var loginService = LoginService();
+  var pacienteService = PacienteService();
 
   Future<Token> futureToken;
   Future<Usuario> futureUsuario;
@@ -31,30 +34,36 @@ class _HomePageState extends State<HomePage> {
 
   String sexoSelected;
 
+  void forgotPassword() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ResetPassword()));
+  }
+
   void login() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    futureToken = loginService.login(emailuserCrtl.text, passuserCrtl.text);
-
-    futureToken.then((result) {
+    loginService.login(emailuserCrtl.text, passuserCrtl.text).then((result) {
       if (result == null) {
-        print("E-mail ou senha inválidos.");
-
+        print("E-mail ou senha inválidos");
         emailuserCrtl.clear();
         passuserCrtl.clear();
       } else {
-        setState(() {
-          sharedPreferences.setString("token", result.key);
-          sharedPreferences.setString("email", emailuserCrtl.text);
+        pacienteService.getPacienteByEmail(emailuserCrtl.text).then((paciente) {
+          if (paciente == null) {
+            print("Paciente inválido.");
+            emailuserCrtl.clear();
+            passuserCrtl.clear();
+          } else {
+            print(paciente.toJson());
+            setState(() {
+              sharedPreferences.setString("key", result.key);
+              sharedPreferences.setString("id", paciente.id.toString());
+            });
+
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => UserPanel()));
+          }
         });
-
-        emailuserCrtl.clear();
-        passuserCrtl.clear();
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserPanel()),
-        );
       }
     });
   }
@@ -90,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white,
                         ),
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: "E-mail",
                           labelStyle: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                           focusedBorder: OutlineInputBorder(
@@ -204,6 +213,34 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Text(
                         "Entrar",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 320,
+                ),
+                child: FlatButton(
+                  onPressed: forgotPassword,
+                  child: Container(
+                    height: 55,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurpleAccent,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Esqueceu sua senha?",
                         style: TextStyle(
                           color: Colors.white,
                         ),

@@ -21,15 +21,18 @@ class Usuario {
 }
 
 class Paciente {
+  int id;
   int usuario_id;
   String nome;
   String sexo;
   String dataNasc;
   Usuario usuario;
 
-  Paciente({this.usuario_id, this.nome, this.sexo, this.dataNasc, this.usuario});
+  Paciente(
+      {this.usuario_id, this.nome, this.sexo, this.dataNasc, this.usuario});
 
   Paciente.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     usuario = Usuario.fromJson(json['usuario']);
     nome = json['nome'];
     sexo = json['sexo'];
@@ -38,6 +41,7 @@ class Paciente {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     //data['usuario_id'] = this.usuario_id;
     data['usuario'] = this.usuario.toJson();
     data['nome'] = this.nome;
