@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/sintoma.dart';
 import 'package:salvetempo/screens/chooseTime.dart';
+import 'package:salvetempo/screens/observacao.dart';
 import 'package:salvetempo/widget/popup_errorAnamnese.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/sintomaService.dart';
@@ -42,7 +43,7 @@ class _AnamneseState extends State<Anamnese> {
           setState(() {});
         } else {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChooseTime()));
+              context, MaterialPageRoute(builder: (context) => Observacao()));
         }
       } else {
         showDialog(

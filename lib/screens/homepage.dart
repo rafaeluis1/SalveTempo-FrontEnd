@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               sharedPreferences.setString("id", paciente.id.toString());
             });
 
-            Navigator.push(
+            Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => UserPanel()));
           }
         });
