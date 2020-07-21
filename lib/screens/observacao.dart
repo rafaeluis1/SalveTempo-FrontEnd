@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salvetempo/screens/chooseTime.dart';
+import 'package:salvetempo/screens/localizacao.dart';
 import 'package:salvetempo/screens/userpanel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -19,8 +20,8 @@ class _ObservacaoState extends State<Observacao> {
       sharedPreferences.setString("observacao", observacaoCrtl.text);
     });
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => ChooseTime()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Localizacao()));
   }
 
   Future<bool> _onWillPop() async {
@@ -92,7 +93,7 @@ class _ObservacaoState extends State<Observacao> {
                               height: 70,
                               color: Colors.amber,
                               child: Text(
-                                "Salvar".toUpperCase(),
+                                "Próximo".toUpperCase(),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,

@@ -35,81 +35,78 @@ class _ChooseTimeState extends State<ChooseTime> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Selecione o Período"),
-        ),
-        body: Container(
-          width: double.maxFinite,
-          height: double.maxFinite,
-          child: Container(
-            color: Colors.lightBlueAccent,
-            child: Center(
-              child: Container(
-                height: 650,
-                width: 350,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Selecione o Período"),
+      ),
+      body: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: Container(
+          color: Colors.lightBlueAccent,
+          child: Center(
+            child: Container(
+              height: 650,
+              width: 350,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
                 ),
-                child: ListView(
-                  shrinkWrap: true, //just set this property
-                  padding: const EdgeInsets.all(8.0),
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Container(
-                          //height: selectedSeg ? 100 : 60,
-                          height: 500,
+              ),
+              child: ListView(
+                shrinkWrap: true, //just set this property
+                padding: const EdgeInsets.all(8.0),
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        //height: selectedSeg ? 100 : 60,
+                        height: 500,
+                        width: 400,
+                        color: Colors.amberAccent,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedSeg = !selectedSeg;
+                            print(selectedSeg);
+                          });
+                        },
+                        child: Container(
+                          height: 630,
                           width: 400,
-                          color: Colors.amberAccent,
+                          color: Colors.white,
+                          child: ListView(
+                              shrinkWrap: true, //just set this property
+                              padding: const EdgeInsets.all(8.0),
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 60,
+                                ),
+                                timeCard(context, "Manhã"),
+                                SizedBox(
+                                  height: 60,
+                                ),
+                                timeCard(context, "Tarde"),
+                                SizedBox(
+                                  height: 60,
+                                ),
+                                timeCard(context, "Noite"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ]),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedSeg = !selectedSeg;
-                              print(selectedSeg);
-                            });
-                          },
-                          child: Container(
-                            height: 630,
-                            width: 400,
-                            color: Colors.white,
-                            child: ListView(
-                                shrinkWrap: true, //just set this property
-                                padding: const EdgeInsets.all(8.0),
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 60,
-                                  ),
-                                  timeCard(context, "Manhã"),
-                                  SizedBox(
-                                    height: 60,
-                                  ),
-                                  timeCard(context, "Tarde"),
-                                  SizedBox(
-                                    height: 60,
-                                  ),
-                                  timeCard(context, "Noite"),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ),
           ),
