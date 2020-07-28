@@ -29,7 +29,7 @@ class _AnamneseState extends State<Anamnese> {
     String key = sharedPreferences.get("key");
     List<String> sintomas = sharedPreferences.getStringList("sintomas");
 
-    sintomas.add(sintoma + ';' + resposta);
+    sintomas.add(sintomaId + ';' + sintoma + ';' + resposta);
     sharedPreferences.setStringList("sintomas", sintomas);
 
     futureSintomaAnswer = sintomaService.answerSintoma(key, sintomas);
@@ -82,6 +82,7 @@ class _AnamneseState extends State<Anamnese> {
   Future<Sintoma> futureSintoma;
   Future<SintomaAnswer> futureSintomaAnswer;
   String sintoma;
+  String sintomaId;
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +218,7 @@ class _AnamneseState extends State<Anamnese> {
                   future: futureSintoma = showSintoma(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      sintomaId = snapshot.data.id.toString();
                       sintoma = snapshot.data.nomecsv;
                       return Text(
                         utf8.decode(snapshot.data.nome.runes.toList()) + '?',

@@ -22,8 +22,8 @@ class SintomaService {
     var url = 'http://192.168.1.21:8000/showsintoma/';
 
     Map<String, String> body = Map.fromIterable(sintomas,
-        key: (k) => k.toString().split(';')[0],
-        value: (v) => v.toString().split(';')[1]);
+        key: (k) => k.toString().split(';')[1],
+        value: (v) => v.toString().split(';')[2]);
 
     var headers = {"Authorization": "Token " + key};
 
@@ -41,8 +41,8 @@ class SintomaService {
     var url = 'http://192.168.1.21:8000/answersintoma/';
 
     Map<String, String> body = Map.fromIterable(sintomas,
-        key: (k) => k.toString().split(';')[0],
-        value: (v) => v.toString().split(';')[1]);
+        key: (k) => k.toString().split(';')[1],
+        value: (v) => v.toString().split(';')[2]);
 
     var headers = {"Authorization": "Token " + key};
 

@@ -1,6 +1,7 @@
 import 'package:salvetempo/models/medico.dart';
 
 class MedicoService {
+  /*
   List<Medico> createMedicos() {
     List<Medico> medicos = new List<Medico>();
 
@@ -47,5 +48,5 @@ class MedicoService {
     }
 
     return medicosDisponiveis;
-  }
+  }*/
 }

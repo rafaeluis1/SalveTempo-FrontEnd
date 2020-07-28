@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/localizacaoModels.dart';
+import 'package:salvetempo/models/unidadeSaudeModels.dart';
 import 'package:salvetempo/screens/chooseTime.dart';
 import 'package:salvetempo/service/localizacaoService.dart';
+import 'package:salvetempo/service/unidadeSaudeService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Localizacao extends StatefulWidget {
@@ -13,6 +15,7 @@ class Localizacao extends StatefulWidget {
 
 class _LocalizacaoState extends State<Localizacao> {
   var localizacaoService = LocalizacaoService();
+  var unidadeSaudeService = UnidadeSaudeService();
 
   var estadoCrtl = TextEditingController();
   var cidadeCrtl = TextEditingController();
