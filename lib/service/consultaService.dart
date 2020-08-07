@@ -17,6 +17,7 @@ class ConsultaService {
       "paciente_id": pacienteId,
       "unidadeSaude_id": unidadeSaudeId,
       "medico_id": medicoId,
+      "diagnostico_id": "",
       "data": formatDate(dataConsulta, [yyyy, '-', mm, '-', dd]),
       "periodo": periodo,
       "percentual_assertividade_prognostico": "0",
