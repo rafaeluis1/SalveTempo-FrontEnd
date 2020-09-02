@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
+import 'package:salvetempo/screens/anamnese-pessoal.dart';
 import 'package:salvetempo/screens/anamnese.dart';
 import 'package:salvetempo/screens/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -152,12 +153,23 @@ class _UserPanelState extends State<UserPanel> {
                         onPressed: () {
                           futureResult = startConsulta();
 
+                          //futureResult.then((result) {
+                          //  if (result == 0) {
+                          //    Navigator.push(
+                          //        context,
+                          //        MaterialPageRoute(
+                          //            builder: (context) => Anamnese()));
+                          //  } else {
+                          //    print('Algo deu errado');
+                          //  }
+                          //});
+
                           futureResult.then((result) {
                             if (result == 0) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Anamnese()));
+                                      builder: (context) => AnamnesePessoal()));
                             } else {
                               print('Algo deu errado');
                             }

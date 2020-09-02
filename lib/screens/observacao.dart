@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:salvetempo/screens/anamnese-clinica.dart';
+import 'package:salvetempo/screens/anamnese-pessoal.dart';
 import 'package:salvetempo/screens/chooseTime.dart';
 import 'package:salvetempo/screens/localizacao.dart';
 import 'package:salvetempo/screens/userpanel.dart';
@@ -29,12 +31,16 @@ class _ObservacaoState extends State<Observacao> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-              title: Text("Você deseja abortar sua consulta?"),
+              title: Text("Você deseja abortar o apontamento de sintomas?"),
               actions: <Widget>[
                 RaisedButton(
                   child: Text("Sim"),
                   onPressed: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    //Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AnamneseClinica()));
                   },
                 ),
                 RaisedButton(

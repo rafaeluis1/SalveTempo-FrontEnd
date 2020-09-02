@@ -36,6 +36,13 @@ class _AnamneseState extends State<Anamnese> {
     return futureSintomaAnswer;
   }
 
+  Future destroySintomaList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String> sintomas = [];
+
+    sharedPreferences.setStringList("sintomas", sintomas);
+  }
+
   void redirectPage(SintomaAnswer result) {
     if (!(result == null)) {
       if (result.valido == true) {
@@ -61,11 +68,12 @@ class _AnamneseState extends State<Anamnese> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-              title: Text("Você deseja abortar sua consulta?"),
+              title: Text("Você deseja abortar o apontamento de sintomas?"),
               actions: <Widget>[
                 RaisedButton(
                   child: Text("Sim"),
                   onPressed: () {
+                    destroySintomaList();
                     Navigator.pop(context, true);
                   },
                 ),

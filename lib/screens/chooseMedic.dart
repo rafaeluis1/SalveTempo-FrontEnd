@@ -128,52 +128,68 @@ class _ChooseMedicState extends State<ChooseMedic> {
 
     var canContinue = true;
     String key = sharedPreferences.getString("key");
+    String anamnesePessoal = sharedPreferences.getString('anamnese-pessoal');
+    String anamneseClinica = sharedPreferences.getString('anamnese-clinica');
 
     await consultaService
-        .cadastroConsulta(
-            key,
-            sharedPreferences.getString("id"),
-            unidadeSaude.id.toString(),
-            medico.id.toString(),
-            dataConsulta,
-            timeKey.substring(0, 1).toUpperCase(),
-            sharedPreferences.getString("observacao"))
+        .cadastroAnamnese(key, anamnesePessoal, anamneseClinica)
         .then((response) async {
+      var resp = json.decode(response.body);
+
       if (response.statusCode >= 200 &&
           response.statusCode <= 299 &&
           canContinue) {
-        var consultaId = jsonDecode(response.body)['id'].toString();
+        await consultaService
+            .cadastroConsulta(
+                key,
+                sharedPreferences.getString("id"),
+                unidadeSaude.id.toString(),
+                resp['id'].toString(),
+                medico.id.toString(),
+                dataConsulta,
+                timeKey.substring(0, 1).toUpperCase(),
+                sharedPreferences.getString("observacao"))
+            .then((response) async {
+          if (response.statusCode >= 200 &&
+              response.statusCode <= 299 &&
+              canContinue) {
+            var consultaId = jsonDecode(response.body)['id'].toString();
 
-        for (String s in sharedPreferences.getStringList("sintomas")) {
-          var div = s.split(';');
-          await consultaService
-              .insereConsultaSintoma(key, consultaId, div[0], div[2])
-              .then((response) {
-            if (response.statusCode >= 200 &&
-                response.statusCode <= 299 &&
-                canContinue) {
-              print("Salvou Sintoma");
-            } else {
-              print("Ocorreu algo errado ao inserir os sintomas.");
-              canContinue = false;
+            for (String s in sharedPreferences.getStringList("sintomas")) {
+              var div = s.split(';');
+              await consultaService
+                  .insereConsultaSintoma(key, consultaId, div[0], div[2])
+                  .then((response) {
+                if (response.statusCode >= 200 &&
+                    response.statusCode <= 299 &&
+                    canContinue) {
+                  print("Salvou Sintoma");
+                } else {
+                  print("Ocorreu algo errado ao inserir os sintomas.");
+                  canContinue = false;
+                }
+              });
             }
-          });
-        }
 
-        await salvaPrognosticos(
-                key, sharedPreferences.getStringList("sintomas"), consultaId)
-            .then((result) {
-          if (result == true) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EndConsulta(finalizacaoStr)));
+            await salvaPrognosticos(key,
+                    sharedPreferences.getStringList("sintomas"), consultaId)
+                .then((result) {
+              if (result == true) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EndConsulta(finalizacaoStr)));
+              } else {
+                print("Algo deu errado ao finalizar");
+              }
+            });
           } else {
-            print("Algo deu errado ao finalizar");
+            print("Ocorreu algo errado ao salvar a consulta");
+            canContinue = false;
           }
         });
       } else {
-        print("Ocorreu algo errado ao salvar a consulta");
+        print("Ocorreu algo errado ao salvar a anamnese");
         canContinue = false;
       }
     });
