@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salvetempo/models/sintoma.dart';
 import 'package:salvetempo/screens/chooseTime.dart';
 import 'package:salvetempo/screens/observacao.dart';
+import 'package:salvetempo/service/consultaService.dart';
 import 'package:salvetempo/widget/popup_errorAnamnese.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/sintomaService.dart';
@@ -14,6 +15,7 @@ class Anamnese extends StatefulWidget {
 
 class _AnamneseState extends State<Anamnese> {
   var sintomaService = SintomaService();
+  var consultaService = ConsultaService();
 
   Future<Sintoma> showSintoma() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -43,14 +45,40 @@ class _AnamneseState extends State<Anamnese> {
     sharedPreferences.setStringList("sintomas", sintomas);
   }
 
+  Future<bool> savePrognosticos() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String key = sharedPreferences.get("key");
+    List<String> sintomas = sharedPreferences.getStringList("sintomas");
+    var result;
+
+    await consultaService.receivePrognosticos(key, sintomas).then((response) {
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
+        setState(() {
+          sharedPreferences.setString(
+              'prognosticos', jsonEncode(response.body));
+        });
+
+        result = true;
+      } else {
+        print('Algo ocorreu errado ao receber os prognósticos.');
+        result = false;
+      }
+    });
+    return result;
+  }
+
   void redirectPage(SintomaAnswer result) {
     if (!(result == null)) {
       if (result.valido == true) {
         if (result.counter_doencas > 3) {
           setState(() {});
         } else {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Observacao()));
+          savePrognosticos().then((result) {
+            if (result) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Observacao()));
+            }
+          });
         }
       } else {
         showDialog(

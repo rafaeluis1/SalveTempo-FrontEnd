@@ -37,6 +37,18 @@ class _ChooseMedicState extends State<ChooseMedic> {
     var unidadesSaude = new List<UnidadeSaude>();
     var medicosUnidadesSaude = new List<MedicoUnidadeSaude>();
 
+    var especializacoesValidas;
+
+    var progs = json
+        .decode(json.decode(sharedPreferences.getString('prognosticos')))
+        .toList();
+
+    await consultaService
+        .especializacoesValidas(sharedPreferences.getString("key"), progs)
+        .then((response) {
+      especializacoesValidas = json.decode(response.body)['ids'].toList();
+    });
+
     await unidadeSaudeService
         .getUnidadesSaudeByCidadeId(sharedPreferences.getString("cidade"))
         .then((response) async {
@@ -55,7 +67,9 @@ class _ChooseMedicState extends State<ChooseMedic> {
           if (medicosUnidadesSaude.length > 0) {
             for (MedicoUnidadeSaude medico in medicosUnidadesSaude) {
               if (medico.status == 'A' &&
-                  medico.diaPeriodoTrabalho.indexOf(timeKey) >= 0) {
+                  medico.diaPeriodoTrabalho.indexOf(timeKey) >= 0 &&
+                  especializacoesValidas
+                      .contains(medico.medico.especializacao.id)) {
                 var diasSemana = medico.diaPeriodoTrabalho.split('|');
                 diasSemana.removeAt(diasSemana.length - 1);
 
@@ -89,36 +103,29 @@ class _ChooseMedicState extends State<ChooseMedic> {
 
   Future salvaPrognosticos(
       String key, List<String> sintomas, String consultaId) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     bool isOk = true;
-    var prognosticos = new List<Prognostico>();
+    //var prognosticos = new List<Prognostico>();
 
-    await consultaService
-        .receivePrognosticos(key, sintomas)
-        .then((response) async {
-      if (response.statusCode >= 200 && response.statusCode <= 299 && isOk) {
-        Iterable list = json.decode(response.body);
-        prognosticos = list.map((item) => Prognostico.fromJson(item)).toList();
+    var progs = json
+        .decode(json.decode(sharedPreferences.getString('prognosticos')))
+        .toList();
 
-        for (Prognostico p in prognosticos) {
-          await consultaService
-              .insereConsultaPrognostico(
-                  key, consultaId, p.id.toString(), p.porcentagem.toString())
-              .then((response) {
-            if (response.statusCode >= 200 &&
-                response.statusCode <= 299 &&
-                isOk) {
-              print("Salvou Prognóstico");
-            } else {
-              print("Algo deu errado ao salvar o Prognóstico");
-              isOk = false;
-            }
-          });
+    for (var prog in progs) {
+      await consultaService
+          .insereConsultaPrognostico(key, consultaId, prog['id'].toString(),
+              prog['porcentagem'].toString())
+          .then((response) {
+        if (response.statusCode >= 200 && response.statusCode <= 299 && isOk) {
+          print("Salvou Prognóstico");
+        } else {
+          print("Algo deu errado ao salvar o Prognóstico");
+          isOk = false;
         }
-      } else {
-        print("Algo deu errado ao buscar os prognósticos");
-        isOk = false;
-      }
-    });
+      });
+    }
+
     return isOk;
   }
 

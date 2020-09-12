@@ -88,4 +88,15 @@ class ConsultaService {
 
     return http.post(url, body: data, headers: headers);
   }
+
+  Future especializacoesValidas(String key, dynamic progs) {
+    var url = 'http://192.168.1.21:8000/valid_especializacoes_doencas/';
+
+    Map<String, String> body = Map.fromIterable(progs,
+        key: (k) => k['id'].toString(), value: (v) => v['doenca'].toString());
+
+    var headers = {"Authorization": "Token " + key};
+
+    return http.post(url, body: body, headers: headers);
+  }
 }
