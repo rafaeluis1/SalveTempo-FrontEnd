@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:salvetempo/models/paciente.dart';
+import 'package:salvetempo/globals.dart' as globals;
 
 class PacienteService {
   Future<Usuario> getUsuarioByEmail(String email) async {
-    var url = 'http://192.168.1.21:8000/users/?search=' + email;
+    var url = globals.apiURL + 'users/?search=' + email;
     final response = await http.get(url);
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -17,7 +18,7 @@ class PacienteService {
   }
 
   Future<Paciente> getPacienteByEmail(String email) async {
-    var url = 'http://192.168.1.21:8000/pacientes/?search=' + email;
+    var url = globals.apiURL + 'pacientes/?search=' + email;
     final response = await http.get(url);
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -29,7 +30,7 @@ class PacienteService {
   }
 
   Future<Paciente> getPacienteById(String id) async {
-    var url = 'http://192.168.1.21:8000/pacientes/' + id;
+    var url = globals.apiURL + 'pacientes/' + id;
     final response = await http.get(url);
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -41,7 +42,7 @@ class PacienteService {
 
   Future<int> cadastroUsuario(String email, String username, String password,
       String confirmPassword) async {
-    var url = 'http://192.168.1.21:8000/rest-auth/registration/';
+    var url = globals.apiURL + 'rest-auth/registration/';
 
     var data = {
       "username": username,
@@ -61,7 +62,7 @@ class PacienteService {
 
   Future<Paciente> cadastroPaciente(
       int usuario_id, String nome, String sexo, String dataNasc) async {
-    var url = 'http://192.168.1.21:8000/pacientes/';
+    var url = globals.apiURL + 'pacientes/';
     var data = {
       "usuario_id": usuario_id.toString(),
       "nome": nome,

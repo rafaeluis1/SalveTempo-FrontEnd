@@ -6,7 +6,6 @@ import 'package:salvetempo/models/prognostico.dart';
 import 'package:salvetempo/models/unidadeSaudeModels.dart';
 import 'package:salvetempo/screens/end_consulta.dart';
 import 'package:salvetempo/service/consultaService.dart';
-import 'package:salvetempo/service/medicoService.dart';
 import 'package:salvetempo/service/unidadeSaudeService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

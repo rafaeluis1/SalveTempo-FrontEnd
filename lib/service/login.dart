@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'package:salvetempo/globals.dart' as globals;
+
 class Token {
   String key;
 
@@ -20,7 +22,7 @@ class Token {
 
 class LoginService {
   Future<Token> login(String email, String password) async {
-    var url = 'http://192.168.1.21:8000/rest-auth/login/';
+    var url = globals.apiURL + 'rest-auth/login/';
     var data = {"username": email, "email": email, "password": password};
 
     final response = await http.post(url, body: data);
@@ -33,7 +35,7 @@ class LoginService {
   }
 
   Future<int> logout(String key) async {
-    var url = 'http://192.168.1.21:8000/rest-auth/logout/';
+    var url = globals.apiURL + 'rest-auth/logout/';
     var data = {};
     var headers = {"Authorization": "Token " + key};
 
@@ -47,7 +49,7 @@ class LoginService {
   }
 
   Future<bool> resetPassword(String email) async {
-    var url = 'http://192.168.1.21:8000/rest-auth/password/reset/';
+    var url = globals.apiURL + 'rest-auth/password/reset/';
 
     var data = {"email": email};
 

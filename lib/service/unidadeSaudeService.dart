@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:salvetempo/globals.dart' as globals;
 
 class UnidadeSaudeService {
   Future getUnidadesSaudeByCidadeId(String cidadeId) {
-    var url = 'http://192.168.1.21:8000/unidades_saude/?search=' + cidadeId;
+    var url = globals.apiURL + 'unidades_saude/?search=' + cidadeId;
     return http.get(url);
   }
 
   Future getMedicosByUnidadeSaudeId(String key, String unidadeSaudeId) {
-    var url = 'http://192.168.1.21:8000/medicos_unidades_saude_admin/?search=' +
+    var url = globals.apiURL +
+        'medicos_unidades_saude_admin/?search=' +
         unidadeSaudeId;
 
     var headers = {"Authorization": "Token " + key};

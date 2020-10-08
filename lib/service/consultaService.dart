@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:date_format/date_format.dart';
+import 'package:salvetempo/globals.dart' as globals;
 
 class ConsultaService {
   Future cadastroAnamnese(
@@ -8,7 +9,7 @@ class ConsultaService {
     var anamnesePessoalJson = jsonDecode(anamnesePessoal);
     var anamneseClinicaJson = jsonDecode(anamneseClinica);
 
-    var url = 'http://192.168.1.21:8000/anamneses/';
+    var url = globals.apiURL + 'anamneses/';
     var data = {};
     data.addAll(anamnesePessoalJson);
     data.addAll(anamneseClinicaJson);
@@ -27,7 +28,7 @@ class ConsultaService {
       DateTime dataConsulta,
       String periodo,
       String observacao) {
-    var url = 'http://192.168.1.21:8000/consultas/';
+    var url = globals.apiURL + 'consultas/';
 
     var data = {
       "paciente_id": pacienteId,
@@ -49,7 +50,7 @@ class ConsultaService {
 
   Future insereConsultaSintoma(
       String key, String consultaId, String sintomaId, String possui) {
-    var url = 'http://192.168.1.21:8000/consultas-sintomas/';
+    var url = globals.apiURL + 'consultas-sintomas/';
 
     var data = {
       "consulta_id": consultaId,
@@ -63,7 +64,7 @@ class ConsultaService {
   }
 
   Future receivePrognosticos(String key, List<String> sintomas) {
-    var url = 'http://192.168.1.21:8000/returnprognosticos/';
+    var url = globals.apiURL + 'returnprognosticos/';
 
     Map<String, String> body = Map.fromIterable(sintomas,
         key: (k) => k.toString().split(';')[1],
@@ -76,7 +77,7 @@ class ConsultaService {
 
   Future insereConsultaPrognostico(
       String key, String consultaId, String doencaId, String percentual) {
-    var url = 'http://192.168.1.21:8000/consultas-prognosticos/';
+    var url = globals.apiURL + 'consultas-prognosticos/';
 
     var data = {
       "consulta_id": consultaId,
@@ -90,7 +91,7 @@ class ConsultaService {
   }
 
   Future especializacoesValidas(String key, dynamic progs) {
-    var url = 'http://192.168.1.21:8000/valid_especializacoes_doencas/';
+    var url = globals.apiURL + 'valid_especializacoes_doencas/';
 
     Map<String, String> body = Map.fromIterable(progs,
         key: (k) => k['id'].toString(), value: (v) => v['doenca'].toString());

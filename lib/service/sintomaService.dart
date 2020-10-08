@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:salvetempo/models/sintoma.dart';
+import 'package:salvetempo/globals.dart' as globals;
 
 class SintomaService {
   Future<int> startConsulta(String key) async {
-    var url = 'http://192.168.1.21:8000/startconsulta/';
+    var url = globals.apiURL + 'startconsulta/';
     var data = {};
     var headers = {"Authorization": "Token " + key};
 
@@ -19,7 +20,7 @@ class SintomaService {
   }
 
   Future<Sintoma> showSintoma(String key, List<String> sintomas) async {
-    var url = 'http://192.168.1.21:8000/showsintoma/';
+    var url = globals.apiURL + 'showsintoma/';
 
     Map<String, String> body = Map.fromIterable(sintomas,
         key: (k) => k.toString().split(';')[1],
@@ -38,7 +39,7 @@ class SintomaService {
   }
 
   Future<SintomaAnswer> answerSintoma(String key, List<String> sintomas) async {
-    var url = 'http://192.168.1.21:8000/answersintoma/';
+    var url = globals.apiURL + 'answersintoma/';
 
     Map<String, String> body = Map.fromIterable(sintomas,
         key: (k) => k.toString().split(';')[1],
