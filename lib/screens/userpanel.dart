@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:salvetempo/models/paciente.dart';
 import 'package:salvetempo/screens/anamnese-pessoal.dart';
 import 'package:salvetempo/screens/anamnese.dart';
+import 'package:salvetempo/screens/consultas_anteriores.dart';
 import 'package:salvetempo/screens/homepage.dart';
+import 'package:salvetempo/screens/informacoes_pessoais.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/service/sintomaService.dart';
@@ -188,7 +190,12 @@ class _UserPanelState extends State<UserPanel> {
                             fontSize: 20,
                           ),
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ConsultasAnteriores()));
+                        }),
                     SizedBox(
                       height: 10,
                     ),
@@ -202,21 +209,12 @@ class _UserPanelState extends State<UserPanel> {
                             fontSize: 20,
                           ),
                         ),
-                        onPressed: () {}),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    new MaterialButton(
-                        color: Colors.blueAccent,
-                        child: Text(
-                          "Ultimos Médicos Consultados",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
-                        ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => InformacoesPessoais()));
+                        }),
                   ],
                 ),
               ),

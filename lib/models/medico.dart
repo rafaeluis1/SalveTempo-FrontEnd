@@ -67,6 +67,7 @@ class Medico {
 }
 
 class OpcaoConsulta {
+  int id;
   Medico medico;
   UnidadeSaude unidadeSaude;
   DateTime dataConsulta;

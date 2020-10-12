@@ -4,6 +4,28 @@ import 'package:date_format/date_format.dart';
 import 'package:salvetempo/globals.dart' as globals;
 
 class ConsultaService {
+  Future getConsultasByPacienteId(String key, String id, String status) {
+    var url =
+        globals.apiURL + 'consultas/?paciente__id=' + id + '&status=' + status;
+    var headers = {"Authorization": "Token " + key};
+
+    return http.get(url, headers: headers);
+  }
+
+  Future getConsultaById(String key, String consultaId) {
+    var url = globals.apiURL + 'consultas/' + consultaId + '/';
+    var headers = {"Authorization": "Token " + key};
+
+    return http.get(url, headers: headers);
+  }
+
+  Future getConsultasSintomasByConsultaId(String key, String consultaId) {
+    var url = globals.apiURL + 'consultas-sintomas/?search=' + consultaId;
+    var headers = {"Authorization": "Token " + key};
+
+    return http.get(url, headers: headers);
+  }
+
   Future cadastroAnamnese(
       String key, String anamnesePessoal, String anamneseClinica) {
     var anamnesePessoalJson = jsonDecode(anamnesePessoal);
