@@ -97,6 +97,10 @@ class _ChooseMedicState extends State<ChooseMedic> {
       }
     });
 
+    opcoesConsulta.sort((a, b) {
+      return a.dataConsulta.compareTo(b.dataConsulta);
+    });
+
     return opcoesConsulta;
   }
 

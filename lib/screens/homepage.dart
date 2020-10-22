@@ -11,6 +11,7 @@ import 'package:salvetempo/screens/signup.dart';
 import 'package:salvetempo/service/pacienteService.dart';
 import 'package:salvetempo/widget/SlideCadastro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:salvetempo/globals.dart' as globals;
 
 class HomePage extends StatefulWidget {
   @override
@@ -44,17 +45,16 @@ class _HomePageState extends State<HomePage> {
 
     loginService.login(emailuserCrtl.text, passuserCrtl.text).then((result) {
       if (result == null) {
-        print("E-mail ou senha inválidos");
+        globals.errorDialog(context, "E-mail ou senha inválidos");
         emailuserCrtl.clear();
         passuserCrtl.clear();
       } else {
         pacienteService.getPacienteByEmail(emailuserCrtl.text).then((paciente) {
           if (paciente == null) {
-            print("Paciente inválido.");
+            globals.errorDialog(context, "Paciente inválido.");
             emailuserCrtl.clear();
             passuserCrtl.clear();
           } else {
-            print(paciente.toJson());
             setState(() {
               sharedPreferences.setString("key", result.key);
               sharedPreferences.setString("id", paciente.id.toString());

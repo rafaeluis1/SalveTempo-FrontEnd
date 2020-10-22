@@ -41,6 +41,10 @@ class _ConsultasAnterioresState extends State<ConsultasAnteriores> {
       }
     });
 
+    opcoesConsulta.sort((a, b) {
+      return a.dataConsulta.compareTo(b.dataConsulta);
+    });
+
     return opcoesConsulta;
   }
 
