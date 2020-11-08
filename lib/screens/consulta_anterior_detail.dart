@@ -197,7 +197,9 @@ class _ConsultaAnteriorDetailState extends State<ConsultaAnteriorDetail> {
                                         keyboardType: TextInputType.multiline,
                                         maxLines: 8,
                                         controller: TextEditingController()
-                                          ..text = snapshot.data['observacao'],
+                                          ..text = utf8.decode(snapshot
+                                              .data['observacao'].runes
+                                              .toList()),
                                         readOnly: true,
                                       ),
                                     )
